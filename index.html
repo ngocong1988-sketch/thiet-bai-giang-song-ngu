@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduCLIL 5512 - Trợ lý Thiết kế Bài dạy Song ngữ THCS (GDPT 2018)</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Inter & Merriweather / Times-like serif for lesson documents) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Marked.js CDN for Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                            800: '#1e3a8a',
+                        },
+                        edu: {
+                            teal: '#0d9488',
+                            emerald: '#059669',
+                            amber: '#d97706',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        doc: ['Times New Roman', 'Merriweather', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Document Preview Styling for CV 5512 & Worksheets */
+        .document-preview {
+            font-family: 'Times New Roman', 'Merriweather', serif;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+        
+        .document-preview h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+        
+        .document-preview h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e40af;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 0.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .document-preview h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f766e;
+            margin-top: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .document-preview p, .document-preview li {
+            font-size: 1.05rem;
+        }
+
+        .document-preview ul, .document-preview ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .document-preview table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 1rem;
+        }
+
+        .document-preview th, .document-preview td {
+            border: 1px solid #4b5563;
+            padding: 8px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .document-preview th {
+            background-color: #eff6ff;
+            color: #1e3a8a;
+            font-weight: bold;
+        }
+
+        .document-preview blockquote {
+            border-left: 4px solid #3b82f6;
+            background-color: #f0fdf4;
+            padding: 10px 15px;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+
+        /* Worksheet Special Box */
+        .worksheet-card {
+            border: 2px dashed #2563eb;
+            background-color: #fafafa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        /* Print Styling */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: white;
+                color: black;
+            }
+            .print-area {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                width: 100% !important;
+                margin: 0 !important;
+            }
+            .document-preview th {
+                background-color: #f3f4f6 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+
+        /* Loading Spinner Animation */
+        @keyframes spin-slow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 2s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 font-sans flex flex-col">
+
+    <!-- Top Header & API Key Bar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                
+                <!-- Logo & Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-teal-500 flex items-center justify-center text-white shadow-md">
+                        <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-slate-900 leading-tight">EduCLIL 5512</h1>
+                        <p class="text-xs text-slate-500 font-medium">Trợ lý Thiết kế Bài dạy Song ngữ THCS (GDPT 2018)</p>
+                    </div>
+                </div>
+
+                <!-- API Key & Model Configuration Panel -->
+                <div class="flex flex-wrap items-center gap-2 bg-slate-50 p-2 rounded-xl border border-slate-200">
+                    <!-- API Status Badge -->
+                    <div id="api-status-badge" class="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-100 text-amber-800">
+                        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                        <span id="api-status-text">Chưa cấu hình API Key</span>
+                    </div>
+
+                    <!-- Model Selector -->
+                    <select id="model-select" class="text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <option value="gemini-2.5-flash">Model: Gemini 2.5 Flash (Khuyên dùng)</option>
+                        <option value="gemini-2.5-pro">Model: Gemini 2.5 Pro (Nâng cao)</option>
+                    </select>
+
+                    <!-- API Key Input Field -->
+                    <div class="relative flex-1 min-w-[180px] sm:min-w-[220px]">
+                        <input type="password" id="api-key-input" placeholder="Nhập Gemini API Key (AIzaSy...)" 
+                               class="w-full text-xs bg-white border border-slate-300 rounded-lg pl-3 pr-8 py-1.5 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <button type="button" id="toggle-key-visibility" class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs px-1">
+                            <i class="fa-regular fa-eye" id="eye-icon"></i>
+                        </button>
+                    </div>
+
+                    <!-- Save Key Button -->
+                    <button id="save-key-btn" class="bg-slate-800 hover:bg-slate-900 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Lưu Key</span>
+                    </button>
+
+                    <!-- Get Free Key Link -->
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" 
+                       class="text-xs text-brand-600 hover:text-brand-800 font-semibold px-2 py-1 rounded-lg hover:bg-brand-50 transition flex items-center gap-1" title="Lấy Key miễn phí tại Google AI Studio">
+                        <span>Lấy Key miễn phí</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- LEFT PANEL: Input & Control Form (4 cols on lg) -->
+            <section class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-5 no-print">
+                
+                <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                    <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-brand-600"></i>
+                        <span>Thông số bài dạy</span>
+                    </h2>
+                    <span class="text-xs bg-brand-50 text-brand-700 px-2 py-0.5 rounded-full font-semibold">GDPT 2018</span>
+                </div>
+
+                <form id="generator-form" onsubmit="return false;" class="space-y-4">
+                    
+                    <!-- Subject Selection -->
+                    <div>
+                        <label for="subject-select" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">1. Môn học</label>
+                        <select id="subject-select" class="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 font-medium focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <option value="Tin học">Tin học (Computer Science / ICT)</option>
+                            <option value="Khoa học tự nhiên">Khoa học tự nhiên (Natural Science - Vật lý, Hóa học, Sinh học)</option>
+                            <option value="Toán học">Toán học (Mathematics)</option>
+                            <option value="Lịch sử & Địa lí">Lịch sử & Địa lí (History & Geography)</option>
+                            <option value="Công nghệ">Công nghệ (Technology & Engineering)</option>
+                            <option value="Giáo dục công dân">Giáo dục công dân (Civic Education)</option>
+                            <option value="Hoạt động trải nghiệm">Hoạt động trải nghiệm (Experiential Activities)</option>
+                            <option value="Khác">Môn học tùy chỉnh khác...</option>
+                        </select>
+                        <input type="text" id="custom-subject-input" placeholder="Nhập tên môn học tùy chỉnh..." class="hidden mt-2 w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+
+                    <!-- Grade & Textbook in 2 columns -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- Grade -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">2. Khối lớp</label>
+                            <select id="grade-select" class="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 font-medium focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                <option value="Lớp 6">Lớp 6 (Grade 6)</option>
+                                <option value="Lớp 7" selected>Lớp 7 (Grade 7)</option>
+                                <option value="Lớp 8">Lớp 8 (Grade 8)</option>
+                                <option value="Lớp 9">Lớp 9 (Grade 9)</option>
+                            </select>
+                        </div>
+
+                        <!-- Textbook -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">3. Bộ sách</label>
+                            <select id="book-select" class="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 font-medium focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                <option value="Kết nối tri thức với cuộc sống">Kết nối tri thức</option>
+                                <option value="Chân trời sáng tạo">Chân trời sáng tạo</option>
+                                <option value="Cánh diều">Cánh diều</option>
+                                <option value="Chương trình chung">Chung / Tùy chỉnh</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Lesson Name -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="lesson-name" class="text-xs font-bold text-slate-700 uppercase tracking-wider">4. Tên bài học</label>
+                            <span class="text-[11px] text-brand-600 font-medium cursor-pointer hover:underline" id="suggest-lesson-btn">Ví dụ mẫu</span>
+                        </div>
+                        <input type="text" id="lesson-name" placeholder="VD: Mạng xã hội (Social Networks) hoặc Quang hợp" 
+                               value="Mạng xã hội - Social Networks"
+                               class="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 font-medium focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+
+                    <!-- Content Output Type -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">5. Loại nội dung cần tạo</label>
+                        <div class="grid grid-cols-2 gap-2" id="output-type-group">
+                            <label class="cursor-pointer border border-slate-200 bg-slate-50 hover:bg-brand-50 hover:border-brand-300 rounded-xl p-2.5 transition flex items-start gap-2 text-xs font-medium has-[:checked]:bg-brand-50 has-[:checked]:border-brand-500 has-[:checked]:text-brand-800">
+                                <input type="radio" name="output_type" value="warmup" class="mt-0.5 text-brand-600 focus:ring-brand-500">
+                                <div>
+                                    <div class="font-semibold text-slate-900">1. Khởi động</div>
+                                    <div class="text-[11px] text-slate-500 leading-snug">Warm-up game (5-7 phút)</div>
+                                </div>
+                            </label>
+
+                            <label class="cursor-pointer border border-slate-200 bg-slate-50 hover:bg-brand-50 hover:border-brand-300 rounded-xl p-2.5 transition flex items-start gap-2 text-xs font-medium has-[:checked]:bg-brand-50 has-[:checked]:border-brand-500 has-[:checked]:text-brand-800">
+                                <input type="radio" name="output_type" value="lessonplan" class="mt-0.5 text-brand-600 focus:ring-brand-500">
+                                <div>
+                                    <div class="font-semibold text-slate-900">2. KHBD (5512)</div>
+                                    <div class="text-[11px] text-slate-500 leading-snug">Giáo án chuẩn 4 hoạt động</div>
+                                </div>
+                            </label>
+
+                            <label class="cursor-pointer border border-slate-200 bg-slate-50 hover:bg-brand-50 hover:border-brand-300 rounded-xl p-2.5 transition flex items-start gap-2 text-xs font-medium has-[:checked]:bg-brand-50 has-[:checked]:border-brand-500 has-[:checked]:text-brand-800">
+                                <input type="radio" name="output_type" value="worksheet" class="mt-0.5 text-brand-600 focus:ring-brand-500">
+                                <div>
+                                    <div class="font-semibold text-slate-900">3. Phiếu bài tập</div>
+                                    <div class="text-[11px] text-slate-500 leading-snug">Phân hóa 3 mức + Đáp án</div>
+                                </div>
+                            </label>
+
+                            <label class="cursor-pointer border border-slate-200 bg-slate-50 hover:bg-brand-50 hover:border-brand-300 rounded-xl p-2.5 transition flex items-start gap-2 text-xs font-medium has-[:checked]:bg-brand-50 has-[:checked]:border-brand-500 has-[:checked]:text-brand-800">
+                                <input type="radio" name="output_type" value="full" checked class="mt-0.5 text-brand-600 focus:ring-brand-500">
+                                <div>
+                                    <div class="font-semibold text-slate-900 text-brand-700">4. Trọn bộ đầy đủ</div>
+                                    <div class="text-[11px] text-slate-500 leading-snug">Gồm cả 3 phần trên</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Bilingual Level -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">6. Mức độ Song ngữ (CLIL)</label>
+                        <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                            <label class="cursor-pointer border border-slate-200 bg-slate-50 p-2 rounded-xl transition has-[:checked]:bg-teal-50 has-[:checked]:border-teal-500 has-[:checked]:text-teal-800">
+                                <input type="radio" name="bilingual_level" value="basic" checked class="sr-only">
+                                <div class="font-bold">Cơ bản</div>
+                                <div class="text-[10px] text-slate-500 mt-0.5">TV 70% - TA 30%</div>
+                            </label>
+                            
+                            <label class="cursor-pointer border border-slate-200 bg-slate-50 p-2 rounded-xl transition has-[:checked]:bg-teal-50 has-[:checked]:border-teal-500 has-[:checked]:text-teal-800">
+                                <input type="radio" name="bilingual_level" value="medium" class="sr-only">
+                                <div class="font-bold">Cân bằng</div>
+                                <div class="text-[10px] text-slate-500 mt-0.5">TV 50% - TA 50%</div>
+                            </label>
+
+                            <label class="cursor-pointer border border-slate-200 bg-slate-50 p-2 rounded-xl transition has-[:checked]:bg-teal-50 has-[:checked]:border-teal-500 has-[:checked]:text-teal-800">
+                                <input type="radio" name="bilingual_level" value="advanced" class="sr-only">
+                                <div class="font-bold">Nâng cao</div>
+                                <div class="text-[10px] text-slate-500 mt-0.5">TA 80% - TV 20%</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Additional Teacher Instructions -->
+                    <div>
+                        <label for="extra-notes" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">7. Yêu cầu bổ sung (Tùy chọn)</label>
+                        <textarea id="extra-notes" rows="2" placeholder="VD: Bổ sung câu hỏi thảo luận nhóm 4 học sinh; Dùng sơ đồ tư duy; Tập trung từ vựng về an toàn mạng..." 
+                                  class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                    </div>
+
+                    <!-- Generate Action Button -->
+                    <button id="generate-btn" type="button" 
+                            class="w-full bg-gradient-to-r from-brand-600 to-teal-600 hover:from-brand-700 hover:to-teal-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition transform active:scale-[0.99] flex items-center justify-center space-x-2 text-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+                        <span>TẠO NỘI DUNG VỚI AI</span>
+                    </button>
+
+                </form>
+
+            </section>
+
+            <!-- RIGHT PANEL: Result Display & Export Controls (7 cols on lg) -->
+            <section class="lg:col-span-7 space-y-4">
+                
+                <!-- Action Toolbar for Results -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-3 shadow-sm flex flex-wrap items-center justify-between gap-2 no-print">
+                    
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider px-2">Kết quả bài dạy</span>
+                        <span id="output-badge" class="text-xs bg-teal-100 text-teal-800 px-2.5 py-0.5 rounded-full font-semibold">Bản xem trước Mẫu (Demo)</span>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <!-- View Toggle -->
+                        <button id="toggle-view-btn" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1" title="Chuyển đổi giữa giao diện văn bản và mã Markdown">
+                            <i class="fa-solid fa-code text-slate-500"></i>
+                            <span id="toggle-view-text">Xem Markdown</span>
+                        </button>
+
+                        <!-- Copy Button -->
+                        <button id="copy-btn" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1">
+                            <i class="fa-regular fa-copy text-slate-500"></i>
+                            <span>Sao chép</span>
+                        </button>
+
+                        <!-- Export Word Button -->
+                        <button id="export-word-btn" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 px-3 py-1.5 rounded-lg font-semibold transition flex items-center gap-1">
+                            <i class="fa-solid fa-file-word text-blue-600"></i>
+                            <span>Tải Word (.doc)</span>
+                        </button>
+
+                        <!-- Print / Save PDF Button -->
+                        <button id="print-btn" class="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-lg font-semibold transition flex items-center gap-1">
+                            <i class="fa-solid fa-print text-emerald-600"></i>
+                            <span>In / Lưu PDF</span>
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Main Display Box (Document Preview & Raw Markdown) -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden print-area min-h-[600px] flex flex-col">
+                    
+                    <!-- Loading Overlay State -->
+                    <div id="loading-state" class="hidden p-12 text-center my-auto space-y-4">
+                        <div class="inline-block p-4 rounded-full bg-brand-50 text-brand-600 mb-2">
+                            <i class="fa-solid fa-circle-notch animate-spin text-4xl"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-800" id="loading-title">Gemini AI đang phân tích và thiết kế bài dạy...</h3>
+                        <p class="text-xs text-slate-500 max-w-md mx-auto" id="loading-desc">Đang áp dụng Công văn 5512, chuẩn hóa phương pháp CLIL song ngữ và tích hợp bộ từ vựng THCS phù hợp.</p>
+                        <div class="w-48 bg-slate-100 h-1.5 rounded-full mx-auto overflow-hidden">
+                            <div class="bg-gradient-to-r from-brand-500 to-teal-500 h-full w-2/3 animate-pulse"></div>
+                        </div>
+                    </div>
+
+                    <!-- Rendered Document Preview -->
+                    <div id="rendered-output" class="document-preview p-6 sm:p-10 flex-1 overflow-x-auto">
+                        <!-- Default Demo content inserted dynamically via JS on DOM load -->
+                    </div>
+
+                    <!-- Raw Markdown Textarea (Hidden by default) -->
+                    <textarea id="raw-markdown-output" class="hidden w-full h-[650px] p-6 font-mono text-xs bg-slate-900 text-slate-100 focus:outline-none resize-none" readonly></textarea>
+
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 mt-8 text-center text-xs text-slate-500 no-print">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>© EduCLIL 5512 — Công cụ hỗ trợ Giáo viên THCS Việt Nam thiết kế bài học tích hợp nội dung và ngôn ngữ (CLIL).</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none no-print"></div>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        /**
+         * EDUCLIL 5512 APPLICATION LOGIC
+         * Single-file implementation supporting Gemini API call, Markdown rendering, Word Export & Print formatting.
+         */
+
+        // State Management
+        const state = {
+            apiKey: '',
+            selectedModel: 'gemini-2.5-flash',
+            currentMarkdown: '',
+            isRawView: false,
+            isLoading: false
+        };
+
+        // DOM Elements
+        const apiKeyInput = document.getElementById('api-key-input');
+        const saveKeyBtn = document.getElementById('save-key-btn');
+        const toggleKeyVisBtn = document.getElementById('toggle-key-visibility');
+        const eyeIcon = document.getElementById('eye-icon');
+        const apiStatusBadge = document.getElementById('api-status-badge');
+        const apiStatusText = document.getElementById('api-status-text');
+        const modelSelect = document.getElementById('model-select');
+        
+        const subjectSelect = document.getElementById('subject-select');
+        const customSubjectInput = document.getElementById('custom-subject-input');
+        const gradeSelect = document.getElementById('grade-select');
+        const bookSelect = document.getElementById('book-select');
+        const lessonNameInput = document.getElementById('lesson-name');
+        const suggestLessonBtn = document.getElementById('suggest-lesson-btn');
+        const extraNotesInput = document.getElementById('extra-notes');
+        const generateBtn = document.getElementById('generate-btn');
+
+        const renderedOutput = document.getElementById('rendered-output');
+        const rawMarkdownOutput = document.getElementById('raw-markdown-output');
+        const toggleViewBtn = document.getElementById('toggle-view-btn');
+        const toggleViewText = document.getElementById('toggle-view-text');
+        const copyBtn = document.getElementById('copy-btn');
+        const exportWordBtn = document.getElementById('export-word-btn');
+        const printBtn = document.getElementById('print-btn');
+        const outputBadge = document.getElementById('output-badge');
+        const loadingState = document.getElementById('loading-state');
+
+        // Sample Lesson Prompts for Quick Demo Selection
+        const sampleLessons = [
+            { subject: 'Tin học', name: 'Mạng xã hội - Social Networks' },
+            { subject: 'Khoa học tự nhiên', name: 'Quang hợp ở thực vật (Photosynthesis in Plants)' },
+            { subject: 'Toán học', name: 'Tỉ lệ thức và Dãy tỉ số bằng nhau (Proportions)' },
+            { subject: 'Lịch sử & Địa lí', name: 'Vòng tuần hoàn của nước (The Water Cycle)' },
+            { subject: 'Công nghệ', name: 'Ngôi nhà thông minh (Smart Home Technology)' }
+        ];
+
+        // 1. INITIALIZATION & LOCALSTORAGE MANAGEMENT
+        window.addEventListener('DOMContentLoaded', () => {
+            // Load saved API Key & Model from localStorage
+            const savedKey = localStorage.getItem('educlil_gemini_key');
+            if (savedKey) {
+                state.apiKey = savedKey;
+                apiKeyInput.value = savedKey;
+                updateApiStatus(true);
+            } else {
+                updateApiStatus(false);
+            }
+
+            const savedModel = localStorage.getItem('educlil_model');
+            if (savedModel) {
+                state.selectedModel = savedModel;
+                modelSelect.value = savedModel;
+            }
+
+            // Render Initial Demo Content
+            renderMarkdown(DEMO_MARKDOWN);
+            state.currentMarkdown = DEMO_MARKDOWN;
+
+            // Setup Event Listeners
+            initEventListeners();
+        });
+
+        function initEventListeners() {
+            // API Key Events
+            saveKeyBtn.addEventListener('click', saveApiKey);
+            toggleKeyVisBtn.addEventListener('click', toggleKeyVisibility);
+            modelSelect.addEventListener('change', (e) => {
+                state.selectedModel = e.target.value;
+                localStorage.setItem('educlil_model', e.target.value);
+                showToast('Đã đổi model sang: ' + e.target.value, 'info');
+            });
+
+            // Subject Custom Toggle
+            subjectSelect.addEventListener('change', (e) => {
+                if (e.target.value === 'Khác') {
+                    customSubjectInput.classList.remove('hidden');
+                } else {
+                    customSubjectInput.classList.add('hidden');
+                }
+            });
+
+            // Quick Lesson Name Suggestion
+            suggestLessonBtn.addEventListener('click', () => {
+                const randomSample = sampleLessons[Math.floor(Math.random() * sampleLessons.length)];
+                subjectSelect.value = randomSample.subject;
+                customSubjectInput.classList.add('hidden');
+                lessonNameInput.value = randomSample.name;
+                showToast('Đã điền mẫu gợi ý: ' + randomSample.name, 'info');
+            });
+
+            // Action Buttons
+            generateBtn.addEventListener('click', generateLessonPlan);
+            toggleViewBtn.addEventListener('click', toggleViewMode);
+            copyBtn.addEventListener('click', copyMarkdownToClipboard);
+            exportWordBtn.addEventListener('click', exportToWord);
+            printBtn.addEventListener('click', () => window.print());
+        }
+
+        // Toggle Password/Text visibility for API Key
+        function toggleKeyVisibility() {
+            if (apiKeyInput.type === 'password') {
+                apiKeyInput.type = 'text';
+                eyeIcon.className = 'fa-regular fa-eye-slash';
+            } else {
+                apiKeyInput.type = 'password';
+                eyeIcon.className = 'fa-regular fa-eye';
+            }
+        }
+
+        // Save API Key to localStorage
+        function saveApiKey() {
+            const key = apiKeyInput.value.trim();
+            if (!key) {
+                localStorage.removeItem('educlil_gemini_key');
+                state.apiKey = '';
+                updateApiStatus(false);
+                showToast('Đã xóa API Key lưu trữ.', 'warning');
+                return;
+            }
+
+            state.apiKey = key;
+            localStorage.setItem('educlil_gemini_key', key);
+            updateApiStatus(true);
+            showToast('Đã lưu API Key thành công!', 'success');
+        }
+
+        function updateApiStatus(isConfigured) {
+            if (isConfigured) {
+                apiStatusBadge.className = 'flex items-center space-x-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-100 text-emerald-800';
+                apiStatusBadge.querySelector('span:first-child').className = 'w-2 h-2 rounded-full bg-emerald-500';
+                apiStatusText.textContent = 'Đã kết nối API Key';
+            } else {
+                apiStatusBadge.className = 'flex items-center space-x-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-100 text-amber-800';
+                apiStatusBadge.querySelector('span:first-child').className = 'w-2 h-2 rounded-full bg-amber-500 animate-pulse';
+                apiStatusText.textContent = 'Chưa cấu hình API Key';
+            }
+        }
+
+        // 2. AI GENERATION & SYSTEM INSTRUCTION LOGIC
+        async function generateLessonPlan() {
+            if (!state.apiKey) {
+                showToast('Vui lòng nhập và lưu Gemini API Key trước khi sử dụng!', 'error');
+                apiKeyInput.focus();
+                return;
+            }
+
+            const subject = subjectSelect.value === 'Khác' ? customSubjectInput.value.trim() : subjectSelect.value;
+            const grade = gradeSelect.value;
+            const book = bookSelect.value;
+            const lessonName = lessonNameInput.value.trim();
+            const outputType = document.querySelector('input[name="output_type"]:checked').value;
+            const bilingualLevel = document.querySelector('input[name="bilingual_level"]:checked').value;
+            const extraNotes = extraNotesInput.value.trim();
+
+            if (!lessonName) {
+                showToast('Vui lòng nhập tên bài học!', 'warning');
+                lessonNameInput.focus();
+                return;
+            }
+
+            // Set Loading State
+            setLoading(true);
+
+            // Construct System Instruction & Prompt
+            const systemInstruction = `
+Bạn là Chuyên gia Thiết kế Chương trình và Sư phạm Song ngữ (CLIL - Content and Language Integrated Learning) cấp THCS tại Việt Nam với 10 năm kinh nghiệm. Bạn am hiểu sâu sắc Chương trình GDPT 2018 và cấu trúc Kế hoạch bài dạy theo Công văn 5512 của Bộ Giáo dục và Đào tạo Việt Nam.
+
+NHIỆM VỤ CỦA BẠN:
+Tạo tài liệu giảng dạy song ngữ (Anh - Việt) chất lượng cao dành cho giáo viên THCS.
+
+NGUYÊN TẮC BẮT BUỘC VỀ NỘI DUNG & ĐỊNH DẠNG:
+1. Tuân thủ Chương trình GDPT 2018: Định hướng phát triển phẩm chất và năng lực học sinh THCS.
+2. Phương pháp CLIL chuẩn xác:
+   - Sử dụng Tiếng Việt làm ngôn ngữ dẫn dắt kiến thức nền tảng.
+   - Lồng ghép Tiếng Anh ở: Khẩu lệnh lớp học (Classroom language), Thuật ngữ chuyên ngành (Key terminology), Các câu hỏi dẫn dắt tương tác ngắn gọn (A1-A2 Level).
+   - Luôn có BẢNG THUẬT NGỮ CHUYÊN NGÀNH (Glossary) gồm 3 cột: [Thuật ngữ tiếng Anh | Phiên âm IPA | Nghĩa tiếng Việt].
+3. Định dạng Markdown hoàn chỉnh, trực quan, có bảng biểu rõ ràng:
+   - Dùng Bảng Markdown cho Tiến trình dạy học chuẩn 5512 (Cột 1: Hoạt động của GV & HS | Cột 2: Sản phẩm dự kiến).
+   - Phiếu bài tập phân hóa thành 3 mức độ (Nhận biết - Thông hiểu - Vận dụng) đóng khung trong khối kịch bản Markdown đẹp mắt.
+   - Tách biệt phần Phiếu bài tập và phần ĐÁP ÁN VÀ HƯỚNG DẪN CHẤM ở cuối cùng.
+`;
+
+            let outputTypePrompt = '';
+            if (outputType === 'warmup') {
+                outputTypePrompt = 'Chỉ thiết kế 2-3 Kịch bản Hoạt động Khởi động (Warm-up Activity - 5-7 phút) hấp dẫn, kích thích tư duy, kèm câu hỏi tương tác song ngữ.';
+            } else if (outputType === 'lessonplan') {
+                outputTypePrompt = 'Chỉ thiết kế Kế hoạch bài dạy Song ngữ (KHBD chuẩn Công văn 5512) đầy đủ 4 hoạt động: (1) Khởi động, (2) Hình thành kiến thức mới, (3) Luyện tập, (4) Vận dụng + Bảng thuật ngữ Glossary.';
+            } else if (outputType === 'worksheet') {
+                outputTypePrompt = 'Chỉ thiết kế Phiếu bài tập Song ngữ (Bilingual Worksheet) gồm: Khung thông tin học sinh, Bảng từ vựng trọng tâm, Phần A (Nhận biết), Phần B (Thông hiểu), Phần C (Vận dụng) và ĐÁP ÁN CHI TIẾT ở cuối.';
+            } else {
+                outputTypePrompt = 'Thiết kế TRỌN BỘ ĐẦY ĐỦ bao gồm: (1) Bảng thuật ngữ CLIL, (2) 2 Kịch bản Hoạt động Khởi động sôi nổi, (3) Kế hoạch bài dạy chuẩn Công văn 5512 trình bày dạng bảng 2 cột, (4) Phiếu bài tập phân hóa 3 mức độ kèm Đáp án.';
+            }
+
+            let levelDescription = '';
+            if (bilingualLevel === 'basic') {
+                levelDescription = 'Cơ bản (Tiếng Việt làm chủ đạo 70%, lồng ghép thuật ngữ và khẩu lệnh tiếng Anh 30%).';
+            } else if (bilingualLevel === 'medium') {
+                levelDescription = 'Cân bằng (Song ngữ 50/50, các câu hỏi và hoạt động trình bày song song Anh - Việt).';
+            } else {
+                levelDescription = 'Nâng cao (Tiếng Anh chủ đạo 80%, chú thích tiếng Việt cho các từ chuyên môn khó 20%).';
+            }
+
+            const userPrompt = `
+Hãy thiết kế tài liệu giảng dạy song ngữ với các thông số sau:
+- Môn học: ${subject}
+- Khối lớp: ${grade}
+- Bộ sách giáo khoa: ${book}
+- Tên bài học: "${lessonName}"
+- Yêu cầu loại nội dung: ${outputTypePrompt}
+- Mức độ song ngữ (CLIL Level): ${levelDescription}
+- Yêu cầu/Ghi chú riêng từ giáo viên: ${extraNotes || 'Không có.'}
+
+Hãy trình bày bài viết dưới dạng Markdown chuyên nghiệp, cấu trúc rõ ràng, chuẩn phong cách sư phạm Việt Nam.
+`;
+
+            // API Endpoint Setup
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${state.selectedModel}:generateContent?key=${state.apiKey}`;
+
+            const payload = {
+                systemInstruction: {
+                    parts: [{ text: systemInstruction }]
+                },
+                contents: [{
+                    role: "user",
+                    parts: [{ text: userPrompt }]
+                }]
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    let errorMsg = 'Lỗi kết nối Gemini API.';
+                    if (data.error && data.error.message) {
+                        errorMsg = `Lỗi (${data.error.code || response.status}): ${data.error.message}`;
+                    }
+                    throw new Error(errorMsg);
+                }
+
+                const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (!resultText) {
+                    throw new Error('Gemini API không trả về nội dung text phù hợp.');
+                }
+
+                // Update Output State
+                state.currentMarkdown = resultText;
+                renderMarkdown(resultText);
+                outputBadge.textContent = `${subject} - ${grade} (${new Date().toLocaleTimeString()})`;
+                showToast('Tạo nội dung bài dạy thành công!', 'success');
+
+            } catch (err) {
+                console.error('API Error:', err);
+                showToast(err.message, 'error', 6000);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // 3. UI RENDERING & VIEW SWITCHER
+        function renderMarkdown(mdText) {
+            if (typeof marked !== 'undefined') {
+                renderedOutput.innerHTML = marked.parse(mdText);
+            } else {
+                renderedOutput.innerText = mdText;
+            }
+            rawMarkdownOutput.value = mdText;
+        }
+
+        function toggleViewMode() {
+            state.isRawView = !state.isRawView;
+            if (state.isRawView) {
+                renderedOutput.classList.add('hidden');
+                rawMarkdownOutput.classList.remove('hidden');
+                toggleViewText.textContent = 'Xem Giao diện chuẩn';
+            } else {
+                renderedOutput.classList.remove('hidden');
+                rawMarkdownOutput.classList.add('hidden');
+                toggleViewText.textContent = 'Xem Markdown';
+            }
+        }
+
+        function setLoading(isLoading) {
+            state.isLoading = isLoading;
+            if (isLoading) {
+                loadingState.classList.remove('hidden');
+                renderedOutput.classList.add('hidden');
+                rawMarkdownOutput.classList.add('hidden');
+                generateBtn.disabled = true;
+                generateBtn.classList.add('opacity-75', 'cursor-not-allowed');
+                generateBtn.querySelector('span').textContent = 'Đang xử lý với AI...';
+            } else {
+                loadingState.classList.add('hidden');
+                if (state.isRawView) {
+                    rawMarkdownOutput.classList.remove('hidden');
+                } else {
+                    renderedOutput.classList.remove('hidden');
+                }
+                generateBtn.disabled = false;
+                generateBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                generateBtn.querySelector('span').textContent = 'TẠO NỘI DUNG VỚI AI';
+            }
+        }
+
+        // 4. UTILITIES: COPY TO CLIPBOARD & EXPORT TO WORD
+        function copyMarkdownToClipboard() {
+            const textToCopy = state.currentMarkdown;
+            if (!textToCopy) return;
+
+            // Use legacy execCommand or modern navigator.clipboard
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showToast('Đã sao chép toàn bộ văn bản Markdown vào bộ nhớ tạm!', 'success');
+                }).catch(() => fallbackCopy(textToCopy));
+            } else {
+                fallbackCopy(textToCopy);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Đã sao chép vào bộ nhớ tạm!', 'success');
+            } catch (err) {
+                showToast('Không thể sao chép văn bản.', 'error');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        // Export Rendered HTML to formatted Word (.doc) document
+        function exportToWord() {
+            const contentHtml = renderedOutput.innerHTML;
+            if (!contentHtml || contentHtml.trim() === '') {
+                showToast('Không có nội dung để xuất file!', 'warning');
+                return;
+            }
+
+            const header = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' 
+                      xmlns:w='urn:schemas-microsoft-com:office:word' 
+                      xmlns='http://www.w3.org/TR/REC-html40'>
+                <head>
+                    <meta charset='utf-8'>
+                    <title>Kế hoạch bài dạy Song ngữ GDPT 2018</title>
+                    <style>
+                        @page {
+                            size: A4 portrait;
+                            margin: 20mm 15mm 20mm 20mm;
+                        }
+                        body {
+                            font-family: 'Times New Roman', serif;
+                            font-size: 13pt;
+                            line-height: 1.4;
+                            color: #000000;
+                        }
+                        h1 { font-size: 16pt; font-weight: bold; text-align: center; color: #1e3a8a; text-transform: uppercase; margin-bottom: 12pt; }
+                        h2 { font-size: 14pt; font-weight: bold; color: #1e40af; border-bottom: 1.5pt solid #1e40af; padding-bottom: 3pt; margin-top: 14pt; }
+                        h3 { font-size: 13pt; font-weight: bold; color: #0d9488; margin-top: 10pt; }
+                        table { border-collapse: collapse; width: 100%; margin: 10pt 0; }
+                        th, td { border: 1pt solid #000000; padding: 6pt 8pt; vertical-align: top; font-size: 12pt; }
+                        th { background-color: #f0f7ff; font-weight: bold; text-align: center; }
+                        blockquote { border-left: 3pt solid #2563eb; background: #f8fafc; padding: 6pt 10pt; margin: 8pt 0; }
+                        ul, ol { margin-left: 18pt; }
+                        .worksheet-card { border: 1.5pt dashed #2563eb; padding: 10pt; margin: 10pt 0; background-color: #fafafa; }
+                    </style>
+                </head>
+                <body>
+            `;
+            const footer = `</body></html>`;
+            const sourceHTML = header + contentHtml + footer;
+
+            const blob = new Blob(['\ufeff' + sourceHTML], {
+                type: 'application/msword'
+            });
+
+            // Create download link
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const lessonTitle = lessonNameInput.value.trim().replace(/[^a-zA-Z0-9àáảãạăắằẳẵặâấầẩẫậèéẻẽẹêếềểễệđìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵ]/g, '_') || 'Bai_Day_Song_Ngu';
+            a.download = `KHBD_SongNgu_${lessonTitle}.doc`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('Đã tải xuống file Word (.doc) thành công!', 'success');
+        }
+
+        // Custom Toast Notification System
+        function showToast(message, type = 'info', duration = 4000) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgColors = 'bg-slate-800 text-white';
+            let icon = 'fa-circle-info text-blue-400';
+
+            if (type === 'success') {
+                bgColors = 'bg-emerald-900/90 text-emerald-50 border border-emerald-700';
+                icon = 'fa-circle-check text-emerald-400';
+            } else if (type === 'error') {
+                bgColors = 'bg-rose-900/90 text-rose-50 border border-rose-700';
+                icon = 'fa-triangle-exclamation text-rose-400';
+            } else if (type === 'warning') {
+                bgColors = 'bg-amber-900/90 text-amber-50 border border-amber-700';
+                icon = 'fa-circle-exclamation text-amber-400';
+            }
+
+            toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl text-xs font-medium transform transition duration-300 translate-y-2 opacity-0 max-w-md ${bgColors}`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            // Animate in
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            // Remove after duration
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, duration);
+        }
+
+        // 5. RICH DEMO CONTENT FOR FIRST LOAD
+        const DEMO_MARKDOWN = `# KẾ HOẠCH BÀI DẠY SONG NGỮ (CLIL) - MÔN TIN HỌC 7
+**BÀI: MẠNG XÃ HỘI (SOCIAL NETWORKS)**
+*Bộ sách: Kết nối tri thức với cuộc sống | Thời lượng: 1 tiết (45 phút)*
+
+---
+
+## I. BẢNG THUẬT NGỮ TRỌNG TÂM (KEY GLOSSARY)
+
+| Thuật ngữ Tiếng Anh | Phiên âm IPA | Nghĩa Tiếng Việt |
+| :--- | :--- | :--- |
+| **Social Network** | /ˈsəʊʃl ˈnetwɜːk/ | Mạng xã hội |
+| **Privacy Settings** | /ˈprɪvəsi ˈsetɪŋz/ | Cài đặt quyền riêng tư |
+| **Cyberbullying** | /ˈsaɪbəbʊliɪŋ/ | Bắt nạt trên không gian mạng |
+| **Digital Footprint** | /ˈdɪdʒɪtl ˈfʊtprɪnt/ | Dấu chân kỹ thuật số |
+| **Online Profile** | /ˌɒnˈlaɪn ˈprəʊfaɪl/ | Hồ sơ cá nhân trực tuyến |
+
+---
+
+## II. HOẠT ĐỘNG KHỞI ĐỘNG (WARM-UP ACTIVITY - 7 PHÚT)
+
+> **Trò chơi: "GUESS THE LOGO & SLOGAN"**
+> * **Mục tiêu (Objective):** Kích thích sự chú ý, kết nối trải nghiệm thực tế của học sinh về các nền tảng mạng xã hội phổ biến.
+> * **Phương tiện:** Màn hình chiếu các biểu tượng được che mờ 50% (Facebook, YouTube, TikTok, Zalo).
+
+### Tiến trình thực hiện:
+1. **GV (Teacher):** Chiếu hình ảnh và đưa ra câu hỏi bằng Tiếng Anh đơn giản:
+   * *"Look at the screen! Can you guess these online platforms?"* (Nhìn lên màn hình, các em có đoán được đây là các nền tảng trực tuyến nào không?)
+   * *"What do you usually do on these platforms?"* (Các em thường làm gì trên các nền tảng này?)
+2. **HS (Students):** Thảo luận nhanh theo cặp (Pair-work) và trả lời: *"We watch videos, chat with friends, share photos..."*
+3. **GV chốt vấn đề:** *"All of these are called **Social Networks** (Mạng xã hội). Today, we will learn how to use them safely and effectively."*
+
+---
+
+## III. TIẾN TRÌNH DẠY HỌC (LESSON PROCEDURE - CÔNG VĂN 5512)
+
+| Hoạt động của Giáo viên & Học sinh | Sản phẩm dự kiến của Học sinh |
+| :--- | :--- |
+| **Hoạt động 1: Tìm hiểu đặc điểm của Mạng xã hội**<br>- **GV:** Yêu cầu HS đọc SGK và trả lời câu hỏi: *"What are the main features of a Social Network?"*<br>- **HS:** Thảo luận nhóm 4, điền vào phiếu học tập nhỏ.<br>- **Language Focus:** *"Users create profiles, share content, and connect with friends."* | **1. Khái niệm & Đặc điểm:**<br>- Mạng xã hội là kênh trao đổi thông tin trên Internet.<br>- **Đặc điểm chính (Key features):**<br>  + Tạo tài khoản cá nhân (User profile).<br>  + Chia sẻ nội dung (Share text, images, videos).<br>  + Kết nối bạn bè (Connect & communicate). |
+| **Hoạt động 2: Thảo luận về Lợi ích và Nguy cơ (Pros & Cons)**<br>- **GV:** Chia lớp thành 2 phe thảo luận (Debate):<br>  + Group A: Lợi ích của Mạng xã hội (Benefits).<br>  + Group B: Nguy cơ tiềm ẩn (Risks & Dangers).<br>- **GV hỗ trợ từ vựng:** *Information lookup, entertainment, Cyberbullying, Scam.* | **2. Lợi ích và Nguy cơ:**<br>- **Benefits (Lợi ích):** Mở rộng giao lưu, cập nhật tin tức, học tập trực tuyến.<br>- **Risks (Nguy cơ):** Nghiện mạng xã hội (Addiction), lộ thông tin cá nhân (Privacy leak), gặp thông tin xấu độc. |
+
+---
+
+<div class="worksheet-card">
+
+# PHIẾU BÀI TẬP SONG NGỮ (WORKSHEET)
+**Subject:** Computer Science 7 | **Topic:** Social Networks
+**Full Name:** ..................................................... **Class:** 7/......
+
+### PART A: RECOGNITION (NHẬN BIẾT - 4 Points)
+**Task 1: Match the English terms with their correct Vietnamese meanings.**
+1. Privacy Settings &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A. Dấu chân kỹ thuật số
+2. Digital Footprint &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; B. Cài đặt quyền riêng tư
+3. Cyberbullying &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; C. Bắt nạt trên mạng
+
+### PART B: UNDERSTANDING (THÔNG HIỂU - 4 Points)
+**Task 2: Read the sentences and write TRUE (T) or FALSE (F).**
+* [ &nbsp;&nbsp; ] 1. You should share your password with your best friends on Facebook.
+* [ &nbsp;&nbsp; ] 2. Social networks allow users to communicate and share information globally.
+* [ &nbsp;&nbsp; ] 3. Setting your profile to "Private" helps protect your personal information.
+
+### PART C: APPLICATION (VẬN DỤNG - 2 Points)
+**Task 3: Situation Handling (Xử lý tình huống)**
+*Tình huống:* An nhận được một tin nhắn từ người lạ trên mạng xã hội yêu cầu cung cấp số điện thoại và địa chỉ nhà để nhận quà miễn phí. 
+*Question:* What should An do in this situation? Write 2 rules in English or Vietnamese to give An advice.
+*(An nên làm gì trong tình huống này? Hãy viết 2 lời khuyên giúp An).*
+
+</div>
+
+---
+
+## IV. ĐÁP ÁN VÀ HƯỚNG DẪN CHẤM (ANSWER KEY)
+
+### PART A:
+1 - B (Privacy Settings = Cài đặt quyền riêng tư)
+2 - A (Digital Footprint = Dấu chân kỹ thuật số)
+3 - C (Cyberbullying = Bắt nạt trên mạng)
+
+### PART B:
+1 - **FALSE (F)** *(Tuyệt đối không chia sẻ mật khẩu tài khoản)*
+2 - **TRUE (T)**
+3 - **TRUE (T)**
+
+### PART C:
+*Học sinh trả lời đúng 2 ý được tối đa 2.0 điểm. Gợi ý:*
+1. Do not share personal information with strangers (Không chia sẻ thông tin cá nhân cho người lạ).
+2. Report and block the suspicious account / Tell parents or teachers (Báo cáo, chặn tài khoản và báo cho cha mẹ hoặc thầy cô).
+`;
+    </script>
+</body>
+</html>
