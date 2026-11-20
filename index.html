@@ -832,18 +832,17 @@ Hãy trình bày bài viết dưới dạng Markdown chuyên nghiệp, cấu tr�
     table.style.borderCollapse = 'collapse';
   });
 // Làm sạch mã LaTeX thành ký tự mũi tên và toán học chuẩn cho Word
-  clonedContent.innerHTML = clonedContent.innerHTML
-    .replace(/\$\\rightarrow\$|\\rightarrow/g, '→')
-    .replace(/\$\\leftarrow\$|\\leftarrow/g, '←')
-    .replace(/\$\\Rightarrow\$|\\Rightarrow/g, '⇒')
-    .replace(/\$\\leftrightarrow\$|\\leftrightarrow/g, '↔')
-    .replace(/\$\\ge\$|\$\\geq\$|\\geq?/g, '≥')
-    .replace(/\$\\le\$|\$\\leq\$|\\leq?/g, '≤')
-    .replace(/\$\\ne\$|\$\\neq\$|\\neq?/g, '≠')
-    .replace(/\$\\approx\$|\\approx/g, '≈')
-    .replace(/\$\\times\$|\\times/g, '×')
-    .replace(/\$\\div\$|\\div/g, '÷')
-    .replace(/\$([a-zA-Z0-9\s+\-*/=<>]+)\$/g, '$1');
+  // Làm sạch triệt để mọi biến thể của mã LaTeX thành ký tự Unicode chuẩn
+clonedContent.innerHTML = clonedContent.innerHTML
+  .replace(/\$?\s*\\+rightarrow\s*\$?/gi, ' → ')
+  .replace(/\$?\s*\\+leftarrow\s*\$?/gi, ' ← ')
+  .replace(/\$?\s*\\+Rightarrow\s*\$?/gi, ' ⇒ ')
+  .replace(/\$?\s*\\+leftrightarrow\s*\$?/gi, ' ↔ ')
+  .replace(/\$?\s*\\+geq?\s*\$?/gi, ' ≥ ')
+  .replace(/\$?\s*\\+leq?\s*\$?/gi, ' ≤ ')
+  .replace(/\$?\s*\\+neq?\s*\$?/gi, ' ≠ ')
+  .replace(/\$?\s*\\+times\s*\$?/gi, ' × ')
+  .replace(/\$?\s*\\+div\s*\$?/gi, ' ÷ ');
   // 3. Cấu trúc chuẩn Microsoft Word XML + CSS định dạng Công văn 5512 & Nghị định 30
   const wordTemplate = `
     <html xmlns:o='urn:schemas-microsoft-com:office:office' 
