@@ -809,63 +809,168 @@ Hãy trình bày bài viết dưới dạng Markdown chuyên nghiệp, cấu tr�
 
         // Export Rendered HTML to formatted Word (.doc) document
         function exportToWord() {
-            const contentHtml = renderedOutput.innerHTML;
-            if (!contentHtml || contentHtml.trim() === '') {
-                showToast('Không có nội dung để xuất file!', 'warning');
-                return;
-            }
+  // 1. Lấy nội dung HTML đã được render từ Markdown (giả sử vùng hiển thị có id="result-content")
+  const contentElement = document.getElementById('result-content');
+  if (!contentElement || !contentElement.innerHTML.trim()) {
+    alert('Chưa có nội dung giáo án/phiếu bài tập để xuất file!');
+    return;
+  }
 
-            const header = `
-                <html xmlns:o='urn:schemas-microsoft-com:office:office' 
-                      xmlns:w='urn:schemas-microsoft-com:office:word' 
-                      xmlns='http://www.w3.org/TR/REC-html40'>
-                <head>
-                    <meta charset='utf-8'>
-                    <title>Kế hoạch bài dạy Song ngữ GDPT 2018</title>
-                    <style>
-                        @page {
-                            size: A4 portrait;
-                            margin: 20mm 15mm 20mm 20mm;
-                        }
-                        body {
-                            font-family: 'Times New Roman', serif;
-                            font-size: 13pt;
-                            line-height: 1.4;
-                            color: #000000;
-                        }
-                        h1 { font-size: 16pt; font-weight: bold; text-align: center; color: #1e3a8a; text-transform: uppercase; margin-bottom: 12pt; }
-                        h2 { font-size: 14pt; font-weight: bold; color: #1e40af; border-bottom: 1.5pt solid #1e40af; padding-bottom: 3pt; margin-top: 14pt; }
-                        h3 { font-size: 13pt; font-weight: bold; color: #0d9488; margin-top: 10pt; }
-                        table { border-collapse: collapse; width: 100%; margin: 10pt 0; }
-                        th, td { border: 1pt solid #000000; padding: 6pt 8pt; vertical-align: top; font-size: 12pt; }
-                        th { background-color: #f0f7ff; font-weight: bold; text-align: center; }
-                        blockquote { border-left: 3pt solid #2563eb; background: #f8fafc; padding: 6pt 10pt; margin: 8pt 0; }
-                        ul, ol { margin-left: 18pt; }
-                        .worksheet-card { border: 1.5pt dashed #2563eb; padding: 10pt; margin: 10pt 0; background-color: #fafafa; }
-                    </style>
-                </head>
-                <body>
-            `;
-            const footer = `</body></html>`;
-            const sourceHTML = header + contentHtml + footer;
+  // Lấy tên bài học để đặt làm tên file (tùy chỉnh theo id input của bạn)
+  const lessonInput = document.getElementById('lesson-name');
+  const rawTitle = lessonInput && lessonInput.value.trim() ? lessonInput.value.trim() : 'Ke_Hoach_Bai_Day_5512';
+  const safeFileName = rawTitle.replace(/[^a-zA-Z0-9\u00C0-\u1EF9\s_-]/g, '').replace(/\s+/g, '_') + '.doc';
 
-            const blob = new Blob(['\ufeff' + sourceHTML], {
-                type: 'application/msword'
-            });
+  // 2. Xử lý làm sạch HTML trước khi đưa vào Word (đảm bảo bảng biểu luôn có thuộc tính border chuẩn)
+  const clonedContent = contentElement.cloneNode(true);
+  const tables = clonedContent.querySelectorAll('table');
+  tables.forEach(table => {
+    table.setAttribute('border', '1');
+    table.setAttribute('cellspacing', '0');
+    table.setAttribute('cellpadding', '6');
+    table.style.width = '100%';
+    table.style.borderCollapse = 'collapse';
+  });
 
-            // Create download link
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            const lessonTitle = lessonNameInput.value.trim().replace(/[^a-zA-Z0-9àáảãạăắằẳẵặâấầẩẫậèéẻẽẹêếềểễệđìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵ]/g, '_') || 'Bai_Day_Song_Ngu';
-            a.download = `KHBD_SongNgu_${lessonTitle}.doc`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-
-            showToast('Đã tải xuống file Word (.doc) thành công!', 'success');
+  // 3. Cấu trúc chuẩn Microsoft Word XML + CSS định dạng Công văn 5512 & Nghị định 30
+  const wordTemplate = `
+    <html xmlns:o='urn:schemas-microsoft-com:office:office' 
+          xmlns:w='urn:schemas-microsoft-com:office:word' 
+          xmlns='http://www.w3.org/TR/REC-html40'>
+    <head>
+      <meta charset='utf-8'>
+      <title>${rawTitle}</title>
+      <!--[if gte mso 9]>
+      <xml>
+        <w:WordDocument>
+          <w:View>Print</w:View>
+          <w:Zoom>100</w:Zoom>
+          <w:DoNotOptimizeForBrowser/>
+        </w:WordDocument>
+      </xml>
+      <![endif]-->
+      <style>
+        /* Thiết lập khổ giấy A4 và lề chuẩn Nghị định 30 (Trên 2cm, Dưới 2cm, Trái 3cm, Phải 1.5cm) */
+        @page WordSection1 {
+          size: 21.0cm 29.7cm;
+          margin: 2.0cm 1.5cm 2.0cm 3.0cm;
+          mso-header-margin: 1.0cm;
+          mso-footer-margin: 1.0cm;
+          mso-paper-source: 0;
         }
+        div.WordSection1 {
+          page: WordSection1;
+        }
+
+        /* Font Times New Roman cỡ 13 chuẩn hành chính/giáo án */
+        body, p, div, span, li, td, th {
+          font-family: "Times New Roman", Times, serif !important;
+          font-size: 13pt !important;
+          line-height: 1.25;
+          color: #000000;
+        }
+
+        p {
+          margin-top: 4pt;
+          margin-bottom: 6pt;
+          text-align: justify;
+        }
+
+        /* Định dạng các đề mục I, II, III, 1, 2... */
+        h1 {
+          font-size: 14pt !important;
+          font-weight: bold;
+          text-align: center;
+          text-transform: uppercase;
+          margin-top: 6pt;
+          margin-bottom: 10pt;
+        }
+        h2 {
+          font-size: 13pt !important;
+          font-weight: bold;
+          text-transform: uppercase;
+          margin-top: 10pt;
+          margin-bottom: 6pt;
+        }
+        h3 {
+          font-size: 13pt !important;
+          font-weight: bold;
+          margin-top: 8pt;
+          margin-bottom: 4pt;
+        }
+
+        /* Định dạng danh sách gạch đầu dòng */
+        ul, ol {
+          margin-top: 2pt;
+          margin-bottom: 6pt;
+          padding-left: 20pt;
+        }
+        li {
+          margin-bottom: 4pt;
+          text-align: justify;
+        }
+
+        /* Định dạng khung bảng biểu chuẩn Công văn 5512 */
+        table {
+          width: 100% !important;
+          border-collapse: collapse !important;
+          mso-table-layout-alt: fixed;
+          margin-top: 8pt;
+          margin-bottom: 10pt;
+          border: 1pt solid #000000 !important;
+        }
+        th {
+          border: 1pt solid #000000 !important;
+          background-color: #F2F2F2 !important;
+          font-weight: bold !important;
+          text-align: center !important;
+          vertical-align: middle !important;
+          padding: 6pt !important;
+        }
+        td {
+          border: 1pt solid #000000 !important;
+          vertical-align: top !important;
+          text-align: left !important;
+          padding: 6pt !important;
+          word-wrap: break-word;
+        }
+        /* Ngăn không cho một dòng trong bảng bị cắt đôi giữa 2 trang in */
+        tr {
+          page-break-inside: avoid;
+        }
+
+        /* Định dạng khung hộp (Blockquote) cho Phiếu bài tập / Glossary */
+        blockquote {
+          border: 1pt solid #000000;
+          padding: 8pt 10pt;
+          margin: 8pt 0;
+          background-color: #FAFAFA;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="WordSection1">
+        ${clonedContent.innerHTML}
+      </div>
+    </body>
+    </html>
+  `;
+
+  // 4. Tạo Blob với ký tự BOM (\ufeff) để không bao giờ bị lỗi font tiếng Việt có dấu
+  const blob = new Blob(['\ufeff', wordTemplate], {
+    type: 'application/msword;charset=utf-8'
+  });
+
+  // 5. Kích hoạt tải file về máy
+  const url = URL.createObjectURL(blob);
+  const downloadLink = document.createElement('a');
+  downloadLink.href = url;
+  downloadLink.download = safeFileName;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+  URL.revokeObjectURL(url);
+}
 
         // Custom Toast Notification System
         function showToast(message, type = 'info', duration = 4000) {
