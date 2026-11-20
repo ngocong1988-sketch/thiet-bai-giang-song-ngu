@@ -826,7 +826,6 @@ Hãy trình bày bài viết dưới dạng Markdown chuyên nghiệp, cấu tr�
   const lessonInput = document.getElementById('lesson-name') || document.querySelector('input[type="text"]');
   const rawTitle = lessonInput && lessonInput.value.trim() ? lessonInput.value.trim() : 'Ke_Hoach_Bai_Day_5512';
   const safeFileName = rawTitle.replace(/[^a-zA-Z0-9\u00C0-\u1EF9\s_-]/g, '').replace(/\s+/g, '_') + '.doc';
-
   // 2. Xử lý làm sạch HTML trước khi đưa vào Word (đảm bảo bảng biểu luôn có thuộc tính border chuẩn)
   const clonedContent = contentElement.cloneNode(true);
   const tables = clonedContent.querySelectorAll('table');
@@ -838,16 +837,19 @@ Hãy trình bày bài viết dưới dạng Markdown chuyên nghiệp, cấu tr�
     table.style.borderCollapse = 'collapse';
   });
 // Làm sạch triệt để mọi biến thể của mã LaTeX thành ký tự Unicode chuẩn
-clonedContent.innerHTML = clonedContent.innerHTML
-  .replace(/\$?\s*\\+rightarrow\s*\$?/gi, ' → ')
-  .replace(/\$?\s*\\+leftarrow\s*\$?/gi, ' ← ')
-  .replace(/\$?\s*\\+Rightarrow\s*\$?/gi, ' ⇒ ')
-  .replace(/\$?\s*\\+leftrightarrow\s*\$?/gi, ' ↔ ')
-  .replace(/\$?\s*\\+geq?\s*\$?/gi, ' ≥ ')
-  .replace(/\$?\s*\\+leq?\s*\$?/gi, ' ≤ ')
-  .replace(/\$?\s*\\+neq?\s*\$?/gi, ' ≠ ')
-  .replace(/\$?\s*\\+times\s*\$?/gi, ' × ')
-  .replace(/\$?\s*\\+div\s*\$?/gi, ' ÷ ');
+// Làm sạch triệt để mọi biến thể của mã LaTeX thành ký tự Unicode chuẩn
+  clonedContent.innerHTML = clonedContent.innerHTML
+    .replace(/<br\s*\/?>/gi, '</p><p>')
+    .replace(/\$?\s*\\+rightarrow\s*\$?/gi, ' → ')
+    .replace(/\$?\s*\\+rightarrow\s*\$?/gi, ' → ')
+    .replace(/\$?\s*\\+leftarrow\s*\$?/gi, ' ← ')
+    .replace(/\$?\s*\\+Rightarrow\s*\$?/gi, ' ⇒ ')
+    .replace(/\$?\s*\\+leftrightarrow\s*\$?/gi, ' ↔ ')
+    .replace(/\$?\s*\\+geq?\s*\$?/gi, ' ≥ ')
+    .replace(/\$?\s*\\+leq?\s*\$?/gi, ' ≤ ')
+    .replace(/\$?\s*\\+neq?\s*\$?/gi, ' ≠ ')
+    .replace(/\$?\s*\\+times\s*\$?/gi, ' × ')
+    .replace(/\$?\s*\\+div\s*\$?/gi, ' ÷ ');
   // 3. Cấu trúc chuẩn Microsoft Word XML + CSS định dạng Công văn 5512 & Nghị định 30
   const wordTemplate = `
     <html xmlns:o='urn:schemas-microsoft-com:office:office' 
