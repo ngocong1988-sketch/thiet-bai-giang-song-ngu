@@ -492,7 +492,8 @@
         const printBtn = document.getElementById('print-btn');
         const outputBadge = document.getElementById('output-badge');
         const loadingState = document.getElementById('loading-state');
-
+        const aiText = data.candidates[0].content.parts[0].text
+  .replace(/\$?\s*\\+rightarrow\s*\$?/gi, ' → ');
         // Sample Lesson Prompts for Quick Demo Selection
         const sampleLessons = [
             { subject: 'Tin học', name: 'Mạng xã hội - Social Networks' },
